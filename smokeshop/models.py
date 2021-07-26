@@ -17,6 +17,9 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+    def __str__(self):
+        return self.name
+
 
 class Product(models.Model):
     """Модель содержит характеристики конкретного продукта"""
@@ -32,13 +35,13 @@ class Product(models.Model):
                 related_name='products',
                 on_delete=models.CASCADE
     )
-    slug = models.SlugField(max_length=100, unique=True)
     name = models.CharField(max_length=150,
                 verbose_name='Название продукта',
                 unique=True,
     )
+    slug = models.SlugField(max_length=100, unique=True)
     is_nicotine = models.BooleanField(default=True, 
-                verbose_name='Содержание никотина')
+                verbose_name='Присутствие никотина')
     brand = models.CharField(max_length=75, 
                 verbose_name='Бренд')
     maker_country = models.CharField(max_length=100,
@@ -70,3 +73,7 @@ class Product(models.Model):
         ordering = ('-name', )
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
+
+    def __str__(self):
+        return self.name
+
