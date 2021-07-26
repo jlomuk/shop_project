@@ -65,3 +65,8 @@ class Product(models.Model):
                 verbose_name='Наличие товара'
     )
     image = models.ImageField(upload_to='products')
+
+    class Meta:
+        ordering = ('-name', )
+        verbose_name = 'Продукт'
+        verbose_name_plural = 'Продукты'
