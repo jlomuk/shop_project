@@ -64,7 +64,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=8, 
                 decimal_places=2, 
                 verbose_name='Цена')
-    awailable = models.BooleanField(default=True,
+    available = models.BooleanField(default=True,
                 verbose_name='Наличие товара'
     )
     image = models.ImageField(upload_to='products')

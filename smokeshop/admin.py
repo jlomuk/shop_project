@@ -15,7 +15,8 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'brand', 'maker_country', 'is_nicotine', 
-                    'strength', 'smoking', 'taste', 'price', 'awailable')
+                    'strength', 'smoking', 'taste', 'price', 'available')
     list_filter = ('name', 'brand', 'price', 'strength', 'smoking')
     prepopulated_fields = {'slug': ('name',),}
+    list_editable = ('price', 'available')
     search_fields = ('name', '=maker_country', '=brand')
