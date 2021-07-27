@@ -8,7 +8,8 @@ app_name = 'smokeshop'
 urlpatterns = [
     path('<slug:category_slug>/', views.ProductListView.as_view(),
          name='product_list_by_category'),
-    path('', views.ProductListView.as_view(), name='product_list'),
+    path('<slug:category_slug>/<slug:product_slug>/',
+        views.ProductDetailView.as_view(), name='product_detail'),
     path('', views.ProductListView.as_view(), name='product_list'),
 
 ]
