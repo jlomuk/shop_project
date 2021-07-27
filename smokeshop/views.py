@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.list import ListView
 
-from smokeshop.models import Category, Product 
+from smokeshop.models import Category, Product
 
 
 class ProductListView(ListView):
@@ -10,7 +10,6 @@ class ProductListView(ListView):
     model = Product
     template_name = 'smokeshop/product/product_list.html'
     queryset = Product.objects.all()
-
 
     def get_queryset(self, *args, **kwargs):
         qs = self.queryset
@@ -21,9 +20,8 @@ class ProductListView(ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         categories = Category.objects.all()
-        request_category = Category.objects.filter(slug=self.kwargs.get('category_slug')).first
-        print(request_category)
+        request_category = Category.objects.filter(
+            slug=self.kwargs.get('category_slug')).first
         context['categories'] = categories
         context['request_category'] = request_category
         return context
-
