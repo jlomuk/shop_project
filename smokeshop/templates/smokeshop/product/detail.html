@@ -66,8 +66,8 @@
                     Average rating: 4.5/5.0
                 </span>
                 <div class="mb-3 font-weight-bold">
-                    <a href="" class="text-warning">
-                        Write review
+                    <a href="" class="text-warning" data-toggle="modal"
+                    data-target="#myModal"> Оценить и написать отзыв
                     </a>
                 </div>
             </div>
@@ -78,27 +78,28 @@
                             <span class="input-group-text
                             font-weight-bold px-3 btn btn-block price">
                             {{ product.price }} руб.
+                            </span>
+                        </div>
+                        <span id="minus" class="input-group-text button_minus px-4">
+                            -
                         </span>
-                    </div>
-                    <span id="minus" class="input-group-text button_minus px-4">
-                        -
+                        <input type="number" value="1" class="form-control
+                        text-center px-3">
+                        <span id="plus" class="input-group-text button_plus px-4">
+                            +
+                        </span>
+                        <div class="input-group-append">
+                            <button class="btn btn-danger px-4 reduce_padding"
+                            type="submit" data-toggle="tooltip"
+                            data-placement="top" title="Add to cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </div>
                     </span>
-                    <input type="number" value="1" class="form-control
-                    text-center px-3">
-                    <span id="plus" class="input-group-text button_plus px-4">
-                        +
-                    </span>
-                    <div class="input-group-append">
-                        <button class="btn btn-danger px-4 reduce_padding"
-                        type="submit" data-toggle="tooltip"
-                        data-placement="top" title="Add to cart">
-                        <i class="fas fa-shopping-cart"></i>
-                    </button>
-                </div>
-            </span>
-        </form>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
-</div>
-</div>
+{% include 'smokeshop/product/modal_feedback.html'%}
 {% endblock content %}
