@@ -2,13 +2,12 @@ from django.test import TestCase
 from django.urls import reverse
 from unittest import mock
 from django.core.files import File
+import tempfile
 
 from smokeshop.models import Category, Product
 
 
-file_mock = mock.MagicMock(spec=File, name='FileMock')
-file_mock.name = 'test1.jpg'
-file_mock.url = '/media/'
+file_mock = tempfile.NamedTemporaryFile(suffix=".jpg").name
 
 
 class CategoryTest(TestCase):
