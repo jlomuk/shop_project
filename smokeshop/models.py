@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Category(models.Model):
@@ -36,6 +37,7 @@ class Product(models.Model):
     )
 
     category = models.ForeignKey(Category,
+                                 verbose_name='Категория',
                                  related_name='products',
                                  on_delete=models.CASCADE
                                  )
@@ -82,5 +84,29 @@ class Product(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('smokeshop:product_detail', 
-            args=[self.category.slug, self.slug])
+        return reverse('smokeshop:product_detail',
+                       args=[self.category.slug, self.slug])
+
+
+class Feedback(models.Model):
+    """Модель для хранения оценок и отзывов на конкретный товар"""
+    product = models.ForeignKey(Product,
+                                verbose_name='Продукт',
+                                related_name='feedbacks',
+                                on_delete=models.CASCADE)
+    author = models.CharField(max_length=100, verbose_name='Автор')
+    rating = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        verbose_name='Оценка'
+    )
+    text = models.TextField(blank=True,
+                            verbose_name='Комментарий')
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.author}-{self.rating} | {self.created}'
+
+    class Meta:
+        ordering = ('-created',)
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'

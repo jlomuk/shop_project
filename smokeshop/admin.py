@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from smokeshop.models import Product, Category
+from smokeshop.models import Product, Category, Feedback
 
 
 admin.site.site_title = "Магазин"
@@ -22,3 +22,10 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',), }
     list_editable = ('price', 'available')
     search_fields = ('name', '=maker_country', '=brand')
+
+
+@admin.register(Feedback)
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = ('author', 'product', 'rating', 'created')
+    list_filter = ('author', 'rating', 'created')
+    search_fields = ('=author',)
