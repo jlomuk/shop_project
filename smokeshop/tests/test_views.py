@@ -41,6 +41,7 @@ class ProductListViewTest(TestCase):
   def test_response_with_all_products(self):
     """Сравнение переданого в контекст шаблона списка всех товаров и 
     Queryset'a из БД"""
+
     response = self.client.get(reverse('smokeshop:product_list'))
     all_products = Product.objects.all()
     self.assertQuerysetEqual(

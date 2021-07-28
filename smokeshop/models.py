@@ -116,8 +116,7 @@ class Feedback(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.author}, rating - {self.rating} | \
-        {self.created.strftime("%m-%d-%Y, %H:%M")}'
+        return f'{self.author}, rating - {self.rating} | {self.created.strftime("%m-%d-%Y")}'
 
     class Meta:
         ordering = ('-created',)
