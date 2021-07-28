@@ -93,7 +93,7 @@ class Product(models.Model):
         Функция отвечает за подсчет средней оценки по всем отзывам на продукт,
         в случаи отсутствия отзывов с оценкой по умолчанию возвращает оценку 5!
         """
-        value = "5,0"
+        value = 5.0
         average = self.feedbacks.aggregate(Avg('rating'))
         if average.get('rating__avg'):
             value = round(average.get('rating__avg'), 1)

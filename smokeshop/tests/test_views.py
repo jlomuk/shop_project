@@ -1,7 +1,5 @@
 from django.test import TestCase
 from django.urls import reverse
-from unittest import mock
-from django.core.files import File
 import tempfile
 
 from smokeshop.models import Category, Product
@@ -123,3 +121,34 @@ class ProductDetailViewTest(TestCase):
                                          args=['wrong_slug', self.product1.slug]))
     self.assertEqual(response_1.status_code, 404)
     self.assertEqual(response_2.status_code, 404)
+
+  def test_post_to_form_success(self):
+    """Тестирование с отправкой Post запроса с оценкой и коментом,
+    проверка успешного сохранения в БД"""
+    url_path = reverse('smokeshop:product_detail',
+                       args=[self.category1.slug, self.product1.slug])
+    response = self.client.post(url_path, data={
+        'text': 'Some text', 'rating': 4
+    })
+    self.assertEqual(response.status_code, 302)
+    self.assertEqual(self.product1.feedbacks.count(), 1)
+    self.assertEqual(self.product1.feedbacks.first().text, 'Some text')
+    self.assertRedirects(response, url_path)
+
+  def test_post_to_form_wrong_data(self):
+    """Отправка Post с некорректными данными"""
+    url_path = reverse('smokeshop:product_detail',
+                       args=[self.category1.slug, self.product1.slug])
+    response1 = self.client.post(url_path, data={'rating': 6})
+    response2 = self.client.post(url_path, data={'rating': 'SOME'})
+    self.assertEqual(response1.status_code, 200)
+    self.assertEqual(response2.status_code, 200)
+    self.assertEqual(self.product1.feedbacks.count(), 0)
+
+  def test_post_to_form_empty_data(self):
+    """Отправка Post с пустыми данными"""
+    url_path = reverse('smokeshop:product_detail',
+                       args=[self.category1.slug, self.product1.slug])
+    response = self.client.post(url_path, data={})
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(self.product1.feedbacks.count(), 0)
