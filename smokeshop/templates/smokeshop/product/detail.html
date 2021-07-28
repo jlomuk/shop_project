@@ -25,7 +25,7 @@
                 <div>
                     <span class="font-weight-bold text-grey">
                         Дымность:
-                    </span> {{ product.smoking }} баллов
+                    </span> {{ product.smoking }} 
                 </div>
                 <div>
                     <span class="font-weight-bold text-grey">
@@ -35,7 +35,7 @@
                 <div>
                     <span class="font-weight-bold text-grey">
                         Крепкость:
-                    </span> {{ product.strength }} баллов
+                    </span> {{ product.strength }} 
                 </div>
                 <div>
                     <span class="font-weight-bold text-grey">
@@ -53,17 +53,17 @@
             </div>
             {% if product.available %}
             <div class="alert alert-success my-3 text-center">
-                Available
+                Доступно для заказа
             </div>
             {% else %}
             <div class="alert alert-danger my-3 text-center">
-                Currently unavailable
+                Товар закончился
             </div>
             {% endif %}
             <hr>
             <div class="review">
                 <span class="font-weight-bold text-grey">
-                    Average rating: 4.5/5.0
+                    Рейтинг: {{ product.get_average_rating_to_feedback }}/5,0
                 </span>
                 <div class="mb-3 font-weight-bold">
                     <a href="" class="text-warning" data-toggle="modal"
@@ -101,5 +101,21 @@
         </div>
     </div>
 </div>
+<hr class="col-7 mx-auto">
+<div class="card shadow-custom border-0 col-lg-8 mx-auto mb-3">
+    <h3 class="py-2 text-grey">Отзывы:</h3>
+    {% for feedback in product.feedbacks.all %}
+    <span class="font-weight-bold py-2 text-grey">
+        {{ feedback.author }} -  Оценка: {{ feedback.rating }}/5 - {{ feedback.created }}
+    </span>
+    <span class="text-justify pb-2">
+        {{ feedback.text }}
+    </span>
+    <hr>
+    {% empty %}
+    <span class="pb-2">Нет отзывов</span>
+    {% endfor %}
+</div>
 {% include 'smokeshop/product/modal_feedback.html'%}
+
 {% endblock content %}

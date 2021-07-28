@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models import Avg
 
 
 class Category(models.Model):
@@ -87,6 +88,17 @@ class Product(models.Model):
         return reverse('smokeshop:product_detail',
                        args=[self.category.slug, self.slug])
 
+    def get_average_rating_to_feedback(self):
+        """
+        Функция отвечает за подсчет средней оценки по всем отзывам на продукт,
+        в случаи отсутствия отзывов с оценкой по умолчанию возвращает оценку 5!
+        """
+        value = "5,0"
+        average = self.feedbacks.aggregate(Avg('rating'))
+        if average.get('rating__avg'):
+            value = round(average.get('rating__avg'), 1)
+        return value
+
 
 class Feedback(models.Model):
     """Модель для хранения оценок и отзывов на конкретный товар"""
@@ -104,7 +116,8 @@ class Feedback(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.author}-{self.rating} | {self.created}'
+        return f'{self.author}, rating - {self.rating} | \
+        {self.created.strftime("%m-%d-%Y, %H:%M")}'
 
     class Meta:
         ordering = ('-created',)
