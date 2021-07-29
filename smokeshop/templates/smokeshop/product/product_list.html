@@ -65,10 +65,9 @@
                         {{ product.name }} - 
                         <span>{{product.weight}} г.</span>
                         <hr>
-
-                        <span>{{ product.price }} руб.</span>
+                        <span class="font-weight-bold">{{ product.price }} руб.</span>
                         <div>
-                            <i class="fas fa-fire"></i> В корзину
+                            <i class="fas fa-bong"></i> {{ product.available|yesno:"Товар в наличии, Товар закончился" }}
                         </div>
                     </div>
                 </div>
