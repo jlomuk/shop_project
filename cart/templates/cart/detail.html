@@ -74,7 +74,8 @@
         <span>{{ item.total_price }} руб.</span>
         </div>
         <div class="cart-item col-12 col-lg-1 text-right align-self-center">
-            <form action="{% url 'cart:cart_delete_product' product.id %}">
+            <form action="{% url 'cart:cart_delete_product' product.id %}" method="post">
+                {% csrf_token %}
                 <button type="submit" class="btn" data-toggle="tooltip"
                 data-placement="top" title="Удалить">
                     <i class="fas fa-trash-alt"></i>
