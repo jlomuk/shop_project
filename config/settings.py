@@ -18,6 +18,7 @@ ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 INSTALLED_APPS = [
     'smokeshop.apps.SmokeshopConfig',
     'cart.apps.CartConfig', 
+    'orders.apps.OrdersConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
