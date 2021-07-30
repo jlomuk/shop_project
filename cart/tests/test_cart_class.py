@@ -1,4 +1,4 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from decimal import Decimal
 from django.urls import reverse
 import tempfile
@@ -50,5 +50,12 @@ class CartСlassTests(TestCase):
         self.assertEqual(self.cart.get_total_price(), Decimal('700'))
 
     def test_method_iter(self):
-        """Тест корректных данных в возвращаемом генераторе"""
-        pass
+        """Тест корректной структуры и данных в возвращаемом генераторе"""
+        self.cart.add(product=self.product1, quantity=3)
+        returned_product_from_generator = list(self.cart)[0]
+        self.assertListEqual(list(returned_product_from_generator.keys()),
+                             ['quantity', 'price', 'product', 'total_price'])
+        self.assertEqual(returned_product_from_generator['quantity'], 3)
+        self.assertEqual(returned_product_from_generator['price'], Decimal('100'))
+        self.assertEqual(returned_product_from_generator['total_price'], Decimal('300'))
+        self.assertEqual(returned_product_from_generator['product'], self.product1)
