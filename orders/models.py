@@ -46,7 +46,8 @@ class Order(models.Model):
     )
     status = models.CharField(
         max_length=30, choices=ORDER_STATUS,
-        verbose_name='Статус заказа' 
+        verbose_name='Статус заказа',
+        default="Created"
     )
     note = models.TextField(
         blank=True, verbose_name='Примечания'
@@ -72,7 +73,7 @@ class Order(models.Model):
         """Метод для подсчета общей суммы товаров, включая доставку"""
         total_cost = sum(item.get_cost() for item in self.items.all())
         total_cost += self.transport_cost
-        return total_cost 
+        return total_cost
 
 
 class OrderItem(models.Model):
@@ -103,6 +104,3 @@ class OrderItem(models.Model):
     class Meta:
         verbose_name_plural = 'Товары в заказе'
         verbose_name = 'Товар в заказ'
-
-
-

@@ -18,6 +18,7 @@ function loadEventListeners() {
     catch(e){}
 
     try{
+
         document.addEventListener('DOMContentLoaded',  setTotalCost);
     }
     catch(e){}
@@ -33,18 +34,21 @@ function decreaseAmount(){
 }
 
 function increaseAmount(){
+
     let currentAmount = Number(document.getElementById('id_quantity').value);
-    currentAmount++;
+    if (currentAmount < 10){
+        currentAmount++;
+    }
     document.getElementById('id_quantity').value = String(currentAmount);
 }
 
 function setTotalCost() {
-    
-    let totalCost = Number(document.getElementById("cart_price").innerText);
+    let totalCost = parseInt(document.getElementById("cart_price").innerHTML);
+    console.log(totalCost)
     totalCost += getSumOfElements('transport');
     totalCost = totalCost.toFixed(2);
     // set total price
-    document.getElementById("order-total").innerHTML = `$${totalCost}`
+    document.getElementById("order-total").innerHTML = `${totalCost} руб`
 }
 
 function getSumOfElements(elementName){
@@ -53,7 +57,7 @@ function getSumOfElements(elementName){
     for(let i = 0; i < radios.length; i++){
         if(radios[i].checked){
             if(radios[i].getAttribute('amount') !== 'free'){
-                sum += Number(radios[i].getAttribute('amount'));
+                sum += parseInt(radios[i].getAttribute('amount'));
             }
         }
     }
