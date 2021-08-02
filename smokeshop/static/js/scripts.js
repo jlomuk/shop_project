@@ -44,7 +44,6 @@ function increaseAmount(){
 
 function setTotalCost() {
     let totalCost = parseInt(document.getElementById("cart_price").innerHTML);
-    console.log(totalCost)
     totalCost += getSumOfElements('transport');
     totalCost = totalCost.toFixed(2);
     // set total price

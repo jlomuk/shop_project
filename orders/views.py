@@ -8,7 +8,11 @@ from django.http import Http404
 
 from .models import Order
 from .forms import OrderCreateForm
-from .servive import calculate_transport_cost, add_products_to_order_from_cart
+from .service import (calculate_transport_cost,
+                      add_products_to_order_from_cart,
+                      create_order_pay_action,
+                      )
+from .tasks import send_mail_after_create_order 
 
 
 class OrderCreateView(CreateView):
@@ -32,12 +36,14 @@ class OrderCreateView(CreateView):
 
     def form_valid(self, form):
         """До создания инстанса модели добавляем стоимость доставки, а так же добавляем
-        к заказу продукты из корзины, очищаем корзину и
+        к заказу продукты из корзины, проводим оплату заказа, отправляем письмо и очищаем корзину. 
         записываем id заказа в сессию клиента"""
         order = form.save(commit=False)
         order.transport_cost = calculate_transport_cost(order)
         order.save()
         add_products_to_order_from_cart(self, order)
+        create_order_pay_action(self.request, order)
+        send_mail_after_create_order.delay(order.id)
         self.request.session['order_id'] = order.id
         return super().form_valid(form)
 
