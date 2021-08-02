@@ -10,9 +10,9 @@ from .models import Order
 from .forms import OrderCreateForm
 from .service import (calculate_transport_cost,
                       add_products_to_order_from_cart,
-                      create_order_pay_action,
+                      create_order_pay_action
                       )
-from .tasks import send_mail_after_create_order 
+from .tasks import send_mail_after_create_order
 
 
 class OrderCreateView(CreateView):

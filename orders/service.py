@@ -27,6 +27,7 @@ def create_order_pay_action(request, order):
         currency='rub',
         description=order,
     )
+    print(charge)
     return charge
 
 

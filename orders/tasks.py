@@ -18,3 +18,4 @@ def send_mail_after_create_order(order_id):
         'admin@smokeshop.com',
         [order.email]
     )
+    return mail_sent
