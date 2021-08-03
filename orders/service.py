@@ -8,9 +8,18 @@ from django.http import HttpResponse
 
 from .models import OrderItem
 from cart.services.cart import Cart
+from .tasks import send_mail_after_change_order
 
 
 stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
+
+
+def change_status_order(queryset, status):
+    """функция меняет статус заказа"""
+    for order in queryset:
+        order.status = status
+        order.save()
+        send_mail_after_change_order.delay(order.id)
 
 
 def initial_response_for_xlsx():
@@ -38,7 +47,8 @@ def create_report_to_xlsx_for_orders(response, opts, products, queryset):
         worksheet.write(0, column, item)
 
     for row, obj in enumerate(queryset):
-        prod_tracker = {product.name: {'qty': 0, 'price':0} for product in products}
+        prod_tracker = {product.name: {'qty': 0, 'price': 0}
+                        for product in products}
         order_items = obj.items.all()
         for item in order_items:
             prod_tracker[item.product.name]['qty'] = item.quantity
@@ -48,7 +58,7 @@ def create_report_to_xlsx_for_orders(response, opts, products, queryset):
         for field in fields:
             value = getattr(obj, field.name)
             if field.name == 'transport_cost':
-                order_price_total += value 
+                order_price_total += value
             if isinstance(value, datetime.datetime):
                 value = value.strftime('%d/%m/%Y')
             data_row.append(value)
@@ -57,14 +67,13 @@ def create_report_to_xlsx_for_orders(response, opts, products, queryset):
             for qty_price in prod_tracker[product]:
                 data_row.append(prod_tracker[product][qty_price])
             order_price_total += (
-                prod_tracker[product]['qty'] *  prod_tracker[product]['price']
+                prod_tracker[product]['qty'] * prod_tracker[product]['price']
             )
         data_row.append(order_price_total)
         for column, item in enumerate(data_row):
             worksheet.write(row + 1, column, item)
     workbook.close()
     return response
-    
 
 
 def _get_customer(request, order):

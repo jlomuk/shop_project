@@ -19,3 +19,20 @@ def send_mail_after_create_order(order_id):
         [order.email]
     )
     return mail_sent
+
+
+@shared_task
+def send_mail_after_change_order(order_id):
+    """Отправка письма в случаи изменения статуса заказа"""
+    order = Order.objects.get(id=order_id)
+    subject = f'Заказ № {order.id}'
+    message = f'Дорогой {order.first_name} {order.last_name}, \n\n' \
+        f'У вашего заказа № {order_id} был изменен статус на ' \
+        f'"{order.get_status_display()}"' 
+    mail_sent = send_mail(
+        subject,
+        message,
+        'admin@smokeshop.com',
+        [order.email]
+    )
+    return mail_sent
