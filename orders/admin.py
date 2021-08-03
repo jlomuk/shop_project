@@ -1,14 +1,24 @@
 from django.contrib import admin
+from django.urls import path, reverse   
+from django.utils.html import format_html
 
+
+from .tasks import send_mail_after_change_order
 from .models import Order, OrderItem
 from smokeshop.models import Product
 from .service import (initial_response_for_xlsx,
                       create_report_to_xlsx_for_orders,
-                      change_status_order)
+                      )
 
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
+
+
+def order_pdf(obj):
+    return format_html('<a href="{}">PDF</a>', 
+        reverse('orders:get_pdf_order', args=[obj.id]))
+order_pdf.short_description = "Распечатать Pdf"
 
 
 def export_to_xlsx(modeladmin, request, queryset):
@@ -18,6 +28,14 @@ def export_to_xlsx(modeladmin, request, queryset):
     response = initial_response_for_xlsx()
     return create_report_to_xlsx_for_orders(response, opts, products, queryset)
 export_to_xlsx.short_description = 'Сформировать отчет по заказам'
+
+
+def change_status_order(queryset, status):
+    """функция меняет статус заказа"""
+    for order in queryset:
+        order.status = status
+        order.save()
+        send_mail_after_change_order.delay(order.id)
 
 
 def make_process_status_orders(modeladmin, request, queryset):
@@ -49,7 +67,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'first_name', 'last_name',
         'email', 'address', 'city',
-        'transport', 'status', 'created'
+        'transport', 'status', 'created', order_pdf,
     )
     list_filter = ('created', 'status')
     list_editable = ('status',)

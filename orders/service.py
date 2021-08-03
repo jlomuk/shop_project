@@ -1,25 +1,35 @@
+import os
 import stripe
 import datetime
 import xlsxwriter
-from decimal import Decimal
+import weasyprint
+from io import BytesIO  
 
+from decimal import Decimal
 from django.conf import settings
 from django.http import HttpResponse
+from django.template.loader import render_to_string
+
 
 from .models import OrderItem
 from cart.services.cart import Cart
-from .tasks import send_mail_after_change_order
 
 
 stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
 
 
-def change_status_order(queryset, status):
-    """функция меняет статус заказа"""
-    for order in queryset:
-        order.status = status
-        order.save()
-        send_mail_after_change_order.delay(order.id)
+def forming_report_order_to_pdf(order, file=False):
+    """функция формирует pdf документ из html шаблона"""
+    if file: 
+        response = BytesIO()
+    else:
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'filename=order_{order.id}.pdf'
+    html = render_to_string('orders/pdf.html', {'order': order})
+    stylesheets = [weasyprint.CSS(os.path.join(
+        str(settings.STATIC_ROOT) + '/css/pdf.css'))]
+    weasyprint.HTML(string=html).write_pdf(response, stylesheets=stylesheets)
+    return response
 
 
 def initial_response_for_xlsx():
@@ -93,7 +103,6 @@ def create_order_pay_action(request, order):
         currency='rub',
         description=order,
     )
-    print(charge)
     return charge
 
 

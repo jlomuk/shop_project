@@ -5,12 +5,14 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.conf import settings
 from django.http import Http404
+from django.contrib.admin.views.decorators import staff_member_required
 
 from .models import Order
 from .forms import OrderCreateForm
 from .service import (calculate_transport_cost,
                       add_products_to_order_from_cart,
-                      create_order_pay_action
+                      create_order_pay_action,
+                      forming_report_order_to_pdf,
                       )
 from .tasks import send_mail_after_create_order
 
@@ -55,3 +57,11 @@ def order_created_success(request):
     order = get_object_or_404(Order, id=order_id)
     del request.session['order_id']
     return render(request, 'orders/order_complete.html', {'order': order})
+
+
+@staff_member_required
+def get_pdf_order(request, order_id):
+    """Обработчик отвечает за формирование информации по заказу в виде pdf"""
+    order = get_object_or_404(Order, id=order_id)
+    response = forming_report_order_to_pdf(order)
+    return response
