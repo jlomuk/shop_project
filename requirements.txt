@@ -29,3 +29,4 @@ stripe==2.60.0
 urllib3==1.26.6
 vine==5.0.0
 wcwidth==0.2.5
+XlsxWriter==1.4.5
