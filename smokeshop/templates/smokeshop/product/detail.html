@@ -108,6 +108,7 @@
     {% for feedback in product.feedbacks.all %}
     <span class="font-weight-bold py-2 text-grey">
         {{ feedback.author }} -  Оценка: {{ feedback.rating }}/5 - {{ feedback.created }}
+
     </span>
     <span class="text-justify pb-2">
         {{ feedback.text }}

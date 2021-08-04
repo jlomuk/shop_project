@@ -51,7 +51,10 @@ class ProductDetailView(FormMixin, CategoryFilterToSlugMixin, DetailView):
 
     def form_valid(self, form):
         comment = form.save(commit=False)
-        comment.author = self.request.user
+        comment.author = "Анонимный пользователь"
+        if self.request.user.is_authenticated:
+            comment.author = \
+                f'{self.request.user.first_name} {self.request.user.last_name}'
         comment.product = self.object
         comment.save()   
         return super().form_valid(form)

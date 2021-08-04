@@ -1,24 +1,26 @@
 {% extends 'smokeshop/base.html' %}
+
 {% block title %}Вход{% endblock %}
+
 {% block content %}
 <div class="card shadow-custom border-0 col-lg-4 mx-auto mb-3">
-    <h3 class="py-2 font-weight-bold text-grey text-center">Log in</h3>
-    <form action="" method="post">
-        {% csrf_token %}
-        {% for field, errors in form.errors.items %}
-            {% for error in errors %}
-            <div class="shadow-custom messages alert alert-danger col-lg-12 mb-5 mx-auto text-center">
+    <h3 class="py-2 font-weight-bold text-grey text-center">Вход</h3>
+    {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+            <div class="shadow-custom messages alert alert-danger col-lg-12 mx-auto text-center">
                 {{ error }}
             </div>
-            {% endfor %}
-        {% endfor %}  
+        {% endfor %}
+    {% endfor %} 
+    <form action="" method="post">
+        {% csrf_token %}
         <div class="input-field">
+            <label for="email">Логин/Почта</label>
             {{ form.username }}
-            <label for="email">Почта</label>
         </div>
         <div class="input-field">
-            {{ form.password }}
             <label for="password">Пароль</label>
+            {{ form.password }}
         </div>
         <button class="btn btn-block btn-warning mb-3" type="submit">
             Войти
