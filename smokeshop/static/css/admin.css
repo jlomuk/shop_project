@@ -1,12 +1,14 @@
 :root {
     --primary-white: #fff;
     --primary-orange: #ffc107;
-    --primary-red: #dc3545;
+    --primary-blue: #007bff;
     --primary-grey: #444;
+    --primary-haven: #4ba1ca;
+    --primary-red: #dc3545;
 }
 
 #header {
-    background: var(--primary-red);
+    background: var(--primary-blue);
     box-shadow: 0px 2px 5px #444;
     z-index: 2;
 }
@@ -25,21 +27,17 @@
     background: var(--primary-orange);
 }
 
-.module a {
-    color: var(--primary-grey);
-}
-
 div.breadcrumbs {
-    background: var(--primary-orange);
+    background: var(--primary-haven);
     color:var(--primary-grey);
     font-weight: bold;
 }
 
-.paginator input[type=submit]{
+.submit-row > input[type=submit].default {
     background-color: var(--primary-red);
 }
 
-.submit-row input.default {
+.paginator input[type=submit] {
     background-color: var(--primary-red);
 }
 
@@ -54,3 +52,4 @@ div.breadcrumbs {
 .submit-row input:hover, a.button:hover {
     background-color: #ffac07;
 };
+

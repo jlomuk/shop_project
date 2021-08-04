@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'smokeshop.apps.SmokeshopConfig',
     'cart.apps.CartConfig', 
     'orders.apps.OrdersConfig',
+    'accounts.apps.AccountsConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,7 +44,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,6 +70,11 @@ DATABASES = {
         'PORT': env('DB_PORT'),
     }
 }
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'accounts.emailauthbackend.EmailAuthBackend',
+)
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -102,6 +108,10 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+LOGIN_URL = 'accounts:login'
+LOGIN_REDIRECT_URL = 'smokeshop:product_list'
+LOGOUT_REDIRECT_URL = 'smokeshop:product_list'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

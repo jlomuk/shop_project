@@ -3,11 +3,6 @@ from django.contrib import admin
 from smokeshop.models import Product, Category, Feedback
 
 
-admin.site.site_title = "Магазин"
-admin.site.site_header = "Магазин"
-admin.site.index_title = "Магазин табака"
-
-
 class ProductFeedbackInline(admin.StackedInline):
     model = Feedback
     extra = 0

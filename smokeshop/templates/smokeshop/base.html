@@ -15,7 +15,7 @@
     id="main-nav">
     <div class="container">
         <a href="{% url 'smokeshop:product_list' %}" class="navbar-brand">
-            <h3 class="font-weight-bold">Табак</h3>
+            <h3 class="font-weight-bold">ТабакShop</h3>
         </a>
     </div>
     <button class="navbar-toggler" data-toggle="collapse"
@@ -24,6 +24,29 @@
 </button>
 <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="navbar-nav ml-auto">
+        {% if request.user.is_authenticated %}
+        <li class="nav-item">
+            <a href="" class="nav-link text-white">
+                <i class="fas fa-user"></i> {{ request.user.email }}
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'accounts:logout' %}" class="nav-link text-white">
+                <i class="fas fa-sign-out-alt"></i> Выйти
+            </a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+            <a href="{% url 'accounts:login' %}" class="nav-link text-white">
+                <i class="fas fa-sign-in-alt"></i> Вход
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'accounts:registration' %}" class="nav-link text-white">
+                <i class="fas fa-user-plus"></i> Регистрация
+            </a>
+        </li>
+        {% endif %}
         <li class="nav-item">
             <div class="dropdown-custom">
                 <a href="{% url 'cart:cart_detail' %}"

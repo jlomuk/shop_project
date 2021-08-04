@@ -1,0 +1,14 @@
+{% extends 'smokeshop/base.html' %}
+{% block title %}Регистрация завершена{% endblock %}
+{% block content %}
+<div class="card shadow-custom border-0 col-lg-5 mx-auto mb-3 text-center">
+    <h3 class="py-2 font-weight-bold text-grey">
+        Поздравляем и добро пожаловать в SmokeShop
+    </h3>
+    <hr class="my-0">
+    <div class="py-2">
+        Ваш аккаунт был успешно создан
+        Вы можете войти на сайт под своими учетными данными <a href="{% url 'accounts:login' %}">Войти</a>
+    </div>
+</div>
+{% endblock %}
