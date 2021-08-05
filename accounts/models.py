@@ -8,6 +8,7 @@ class Profile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
+        related_name='profile'
     )
     phone = models.CharField(
         verbose_name='Телефон',

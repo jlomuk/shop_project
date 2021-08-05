@@ -31,4 +31,6 @@ urlpatterns = [
         name='password_reset_confirm'),
     path('password_reset/complete/', auth_views.PasswordResetCompleteView.as_view(),
          name='password_reset_complete'),
+
+    path('profile/', views.UpdateProfileCustomer.as_view(), name='profile')
 ]

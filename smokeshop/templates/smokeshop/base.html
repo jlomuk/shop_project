@@ -26,7 +26,7 @@
     <ul class="navbar-nav ml-auto">
         {% if request.user.is_authenticated %}
         <li class="nav-item">
-            <a href="" class="nav-link text-white">
+            <a href="{% url 'accounts:profile' %}" class="nav-link text-white">
                 <i class="fas fa-user"></i> {{ request.user.email }}
             </a>
         </li>

@@ -1,15 +1,6 @@
 {% extends 'smokeshop/base.html' %}
 {% block title %}Регистрация{% endblock %}
 {% block content %}
-{% if messages %}
-<div class="shadow-custom messages alert alert-danger
-col-lg-5 mx-auto text-center">
-{% for message in messages %}
-{{ message }}
-<a href="" class="close">x</a>
-{% endfor %}
-</div>
-{% endif %}
 <div class="card shadow-custom border-0 col-lg-5 mx-auto mb-3">
     <h3 class="py-2 font-weight-bold text-grey text-center">
         Регистрация
@@ -20,7 +11,14 @@ col-lg-5 mx-auto text-center">
                 {{ error }}
             </div>
         {% endfor %}
-    {% endfor %} 
+    {% endfor %}
+    {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+            <div class="shadow-custom messages alert alert-danger col-lg-12 mx-auto text-center">
+                {{ error }}
+            </div>
+        {% endfor %}
+    {% endfor %}  
     <form action="" method="post">
         <div class="form-group">
             {% csrf_token %}
