@@ -1,0 +1,55 @@
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Напишите свой отзыв</h5>
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="bg-grey">
+                        <div class="text-center pt-2">
+                            Оценка:
+                            <div id="full-stars" class="d-inline text-center">
+                                <div class="rating-group">
+                                    <label class="rating__label" for="id_rating_0">
+                                        <i class="rating__icon rating__icon--star fa fa-star"></i>
+                                    </label>
+                                    <input class="rating__input" name="rating"
+                                    id="id_rating_0" value="1" type="radio" required>
+                                    <label class="rating__label" for="id_rating_1">
+                                        <i class="rating__icon rating__icon--star fa fa-star"></i>
+                                    </label>
+                                    <input class="rating__input" name="rating"
+                                    id="id_rating_1" value="2" type="radio" required>
+                                    <label class="rating__label" for="id_rating_2">
+                                        <i class="rating__icon rating__icon--star fa fa-star"></i>
+                                    </label>
+                                    <input class="rating__input" name="rating"
+                                    id="id_rating_2" value="3" type="radio" required>
+                                    <label class="rating__label" for="id_rating_3">
+                                        <i class="rating__icon rating__icon--star fa fa-star"></i>
+                                    </label>
+                                    <input class="rating__input" name="rating"
+                                    id="id_rating_3" value="4" type="radio" required>
+                                    <label class="rating__label" for="id_rating_4">
+                                        <i class="rating__icon rating__icon--star fa fa-star"></i>
+                                    </label>
+                                    <input class="rating__input" name="rating" checked
+                                    id="id_rating_4" value="5" type="radio" required>
+                                </div>
+                            </div>
+                            <hr class="m-0">
+                            <div class="input-field text-center p-2">
+                                {{form.text}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" type="submit">Принять</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

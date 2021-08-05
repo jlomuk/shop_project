@@ -1,9 +1,12 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormMixin
+from django.urls import reverse
 
-from smokeshop.models import Category, Product
+from smokeshop.models import Category, Product, Feedback
 from .mixins import CategoryFilterToSlugMixin
+from .forms import FeedbackForm
 
 
 class ProductListView(CategoryFilterToSlugMixin, ListView):
@@ -23,9 +26,35 @@ class ProductListView(CategoryFilterToSlugMixin, ListView):
         return context
 
 
-class ProductDetailView(CategoryFilterToSlugMixin, DetailView):
-    """View отвечает за отрисовку детальной информации по товару"""
+class ProductDetailView(FormMixin, CategoryFilterToSlugMixin, DetailView):
+    """
+    View отвечает за отрисовку детальной информации по товару, а также за обработку формы 
+    и создания записи комментария в базу данных.
+    """
     model = Product
     template_name = 'smokeshop/product/detail.html'
     queryset = Product.objects.all()
     slug_url_kwarg = 'product_slug'
+    form_class = FeedbackForm
+
+    def get_success_url(self):
+        return reverse('smokeshop:product_detail',
+                       args=[self.object.category.slug, self.object.slug])
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        comment.author = "Анонимный пользователь"
+        if self.request.user.is_authenticated:
+            comment.author = \
+                f'{self.request.user.first_name} {self.request.user.last_name}'
+        comment.product = self.object
+        comment.save()   
+        return super().form_valid(form)
