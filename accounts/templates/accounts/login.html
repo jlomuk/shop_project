@@ -26,5 +26,10 @@
             Войти
         </button>
     </form>
+    <div class="text-center mb-2">
+        <a href="{% url 'accounts:password_reset' %}" class="text-decoration-none">
+        Забыли пароль?
+        </a>
+    </div>
 </div>
 {% endblock %}

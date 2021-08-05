@@ -16,13 +16,13 @@ class LoginCustomerView(LoginView):
 
 class ChangePasswordCustomerView(PasswordChangeView):
     """Обработчик для смены пароля покупателя"""
-    template_name = 'accounts/registration/password_change_form.html'
+    template_name = 'accounts/change_password/password_change_form.html'
     success_url = reverse_lazy('accounts:password_change_success')
 
 
 class CustomerPasswordChangeSuccessView(PasswordChangeDoneView):
     """Вывод страницу после успешной смены пароля"""
-    template_name = 'accounts/registration/password_change_success.html'
+    template_name = 'accounts/change_password/password_change_success.html'
 
 
 class CreateCustomerView(CreateView):
