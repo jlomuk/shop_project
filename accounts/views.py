@@ -29,11 +29,12 @@ class UpdateProfileCustomer(LoginRequiredMixin, UpdateView):
         """Передача двух форм в контекст шаблона"""
         context = super().get_context_data(**kwargs)
         if 'form' not in context:
-            context['form'] = self.form_class(instance=self.get_object())
+            context['form'] = self.form_class(instance=self.object)
         if 'profile_form' not in context:
             context['profile_form'] = self.profile_form(
-                instance=self.get_object().profile
+                instance=self.object.profile
             )
+        context['orders'] = self.object.orders.all()
         return context
 
     def post(self, request, *args, **kwargs):

@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django import forms
@@ -25,7 +25,7 @@ class UserForm(UserCreationForm):
         return email
 
 
-class UpdateUserForm(UserChangeForm):
+class UpdateUserForm(forms.ModelForm):
     """Форма для обновление полей пользователя"""
 
     def __init__(self, *args, **kwargs):

@@ -16,6 +16,7 @@ from .service import (calculate_transport_cost,
                       get_customer_profile,
                       )
 from .tasks import send_mail_after_create_order
+from .decorators import permission_to_order_owner_or_admin
 
 
 class OrderCreateView(CreateView):
@@ -66,11 +67,26 @@ def order_created_success(request):
     return render(request, 'orders/order_complete.html', {'order': order})
 
 
+@permission_to_order_owner_or_admin
 def get_pdf_order(request, order_id):
-    """Обработчик отвечает за формирование информации по заказу в виде pdf. 
-    Выкидывает 404 если запрос на формирование pdf сделано не владельцем или администратором"""
+    """
+    Обработчик отвечает за формирование информации по заказу в виде pdf. 
+    Выкидывает 404 если запрос на формирование pdf сделано не владельцем или администратором
+    """
     order = get_object_or_404(Order, id=order_id)
-    if order.user != request.user and not request.user.is_superuser:
-        raise Http404
     response = forming_report_order_to_pdf(order)
     return response
+
+
+@permission_to_order_owner_or_admin
+def get_order_detail(request, order_id):
+    """
+    Выводит детальную информацию по ранее созданному заказу
+    Выкидывает 404 если запрос на формирование pdf сделано не владельцем или администратором
+    """
+    order = get_object_or_404(Order, id=order_id)
+    items = order.items.all()
+    return render(request, 'orders/order_detail.html', {
+        'order': order,
+        'items': items,
+    })

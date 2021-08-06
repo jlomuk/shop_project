@@ -89,10 +89,10 @@
         <hr>
         <h3 class="mb-3">История заказов:</h3>
         <table class="table">
-            {% for order in request.user.orders.all %}
+            {% for order in orders %}
             <tr>
                 <td>
-                    <a href="" class="text-decoration-none">
+                    <a href="{% url 'orders:get_order_detail' order_id=order.id %}" class="text-decoration-none">
                         {{ order.id }}
                     </a>
                 </td>

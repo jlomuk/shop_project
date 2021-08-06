@@ -128,6 +128,7 @@ def add_products_to_order_from_cart(obj, order):
 
 
 def get_customer_profile(request):
+    """Возвращает информацию из профиля покупателя для формы"""
     initial_data = {
         'first_name': request.user.first_name,
         'last_name': request.user.last_name,
