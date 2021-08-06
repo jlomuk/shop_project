@@ -87,6 +87,33 @@
             </a>
         </div>
         <hr>
+        <h3 class="mb-3">История заказов:</h3>
+        <table class="table">
+            {% for order in request.user.orders.all %}
+            <tr>
+                <td>
+                    <a href="" class="text-decoration-none">
+                        {{ order.id }}
+                    </a>
+                </td>
+                <td>{{ order.created|date }}</td>
+                <td class="text-green">
+                    {{ order.get_total_cost|floatformat:2 }} р.
+                </td>
+                <td>
+                    <a href="{% url 'orders:get_pdf_order' order_id=order.id%}" class="text-decoration-none" target="_blank">
+                        <i class="far fa-file-pdf text-danger"></i>
+                        Товарный чек {{ order.id }}
+                    </a>
+                </td>
+                <td>{{ order.get_status_display }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                У вас не было заказов
+            </tr>
+            {% endfor %}
+        </table>
     </form>
 </div>
 {% endblock %}

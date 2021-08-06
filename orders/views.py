@@ -66,9 +66,11 @@ def order_created_success(request):
     return render(request, 'orders/order_complete.html', {'order': order})
 
 
-@staff_member_required
 def get_pdf_order(request, order_id):
-    """Обработчик отвечает за формирование информации по заказу в виде pdf"""
+    """Обработчик отвечает за формирование информации по заказу в виде pdf. 
+    Выкидывает 404 если запрос на формирование pdf сделано не владельцем или администратором"""
     order = get_object_or_404(Order, id=order_id)
+    if order.user != request.user and not request.user.is_superuser:
+        raise Http404
     response = forming_report_order_to_pdf(order)
     return response
