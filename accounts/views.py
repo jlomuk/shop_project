@@ -8,12 +8,13 @@ from django.contrib.auth.views import (LoginView,
 from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView, UpdateView
 from django.http import HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import UserForm, UpdateUserForm, UpdateProfileForm
 from .models import Profile
 
 
-class UpdateProfileCustomer(UpdateView):
+class UpdateProfileCustomer(LoginRequiredMixin, UpdateView):
     """Обновляет в моделях User и Profile информацию о пользователе"""
     template_name = 'accounts/profile.html'
     form_class = UpdateUserForm

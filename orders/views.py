@@ -13,6 +13,7 @@ from .service import (calculate_transport_cost,
                       add_products_to_order_from_cart,
                       create_order_pay_action,
                       forming_report_order_to_pdf,
+                      get_customer_profile, 
                       )
 from .tasks import send_mail_after_create_order
 
@@ -25,8 +26,12 @@ class OrderCreateView(CreateView):
     success_url = reverse_lazy('orders:order_created')
 
     def get_context_data(self, *args, **kwargs):
-        """Добавляем в контекс шаблона актуальную цену доставки из settings"""
+        """Добавляем в контекс шаблона актуальную цену доставки из settings.
+        Если пользователь прошел аутентификациюб то заполняем поля заказа из профиля"""
         context = super().get_context_data(*args, **kwargs)
+        if self.request.user.is_authenticated:
+            initial_data = get_customer_profile(self.request)
+            context['form'] = self.form_class(initial=initial_data)
         context['transport_cost'] = Decimal(settings.TRANSPORT_COST)
         return context
 

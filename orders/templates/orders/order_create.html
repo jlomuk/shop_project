@@ -56,6 +56,14 @@
                 </div>
             </div>
         </div>
+        {% if not request.user.is_authenticated %}
+            <div class="mt-2 text-center">
+                У вас есть учетная запись?
+                <a href="{% url 'accounts:login' %}" class="text-decoration-none">
+                    Войти
+                </a>
+            </div>
+        {% endif %}
         <hr>
         <h4 class="py-2 font-weight-bold text-grey">
             Способ получения:
