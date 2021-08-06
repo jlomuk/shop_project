@@ -1,0 +1,119 @@
+{% extends 'smokeshop/base.html' %}
+{% block title %}Аккаунт{% endblock %}
+{% block content %}
+
+{% if form.errors or profile_form.errors %}
+    {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+            <div class="shadow-custom messages alert alert-danger col-lg-12 mx-auto text-center">
+                {{ error }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for field, errors in profile_form.errors.items %}
+        {% for error in errors %}
+            <div class="shadow-custom messages alert alert-danger col-lg-12 mx-auto text-center">
+                {{ error }}
+            </div>
+        {% endfor %}
+    {% endfor %}    
+{% elif messages %}
+    <div class="shadow-custom messages alert alert-success text-center col-lg-7 mx-auto"> 
+        {% for message in messages %}
+            {{ message }}
+            <a href="" class="close">x</a>
+        {% endfor %}
+    </div>
+{% endif %}
+<div class="card shadow-custom border-0 col-lg-7 mx-auto mb-3">
+    <h2 class="font-weight-bold text-grey mt-2">Профиль</h2>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="input-field">
+                    {{ form.first_name }}
+                    <label for="first_name">Имя</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-field">
+                    {{ form.last_name }}
+                    <label for="last_name">Фамилия</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-field">
+                    {{ form.email }}
+                    <label for="email">Почта</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-field">
+                    {{ profile_form.phone }}
+                    <label for="phone_number">Телефон</label>
+                </div>
+            </div>
+        </div>
+        <hr class="mt-0">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="input-field">
+                    {{ profile_form.address }}
+                    <label for="address">Адрес</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-field">
+                    {{ profile_form.postal_code }}
+                    <label for="postal_code">Почтовый индекс</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-field">
+                    {{ profile_form.city }}
+                    <label for="city">Город</label>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <button type="submit" class="btn col" data-toggle="tooltip"
+            data-placement="top" title="Fill in new details and click 'Update profile'">
+                Обновить профиль
+            </button>
+            <a class="btn col" href="{% url 'accounts:password_change' %}">
+            Изменить пароль
+            </a>
+        </div>
+        <hr>
+        <h3 class="mb-3">История заказов:</h3>
+        <table class="table">
+            {% for order in orders %}
+            <tr>
+                <td>
+                    <a href="{% url 'orders:get_order_detail' order_id=order.id %}" class="text-decoration-none">
+                        {{ order.id }}
+                    </a>
+                </td>
+                <td>{{ order.created|date }}</td>
+                <td class="text-green">
+                    {{ order.get_total_cost|floatformat:2 }} р.
+                </td>
+                <td>
+                    <a href="{% url 'orders:get_pdf_order' order_id=order.id%}" class="text-decoration-none" target="_blank">
+                        <i class="far fa-file-pdf text-danger"></i>
+                        Товарный чек {{ order.id }}
+                    </a>
+                </td>
+                <td>{{ order.get_status_display }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                У вас не было заказов
+            </tr>
+            {% endfor %}
+        </table>
+    </form>
+</div>
+{% endblock %}

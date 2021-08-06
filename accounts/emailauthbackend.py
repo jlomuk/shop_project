@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 class EmailAuthBackend(BaseBackend):
-    """Добавляет возможность авторизации по логину-почте"""
+    """Добавляет возможность аутентификации по почте"""
 
     def authenticate(self, request, *args, **kwargs):
         try:

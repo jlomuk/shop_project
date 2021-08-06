@@ -13,8 +13,10 @@ from .service import (calculate_transport_cost,
                       add_products_to_order_from_cart,
                       create_order_pay_action,
                       forming_report_order_to_pdf,
+                      get_customer_profile,
                       )
 from .tasks import send_mail_after_create_order
+from .decorators import permission_to_order_owner_or_admin
 
 
 class OrderCreateView(CreateView):
@@ -25,8 +27,12 @@ class OrderCreateView(CreateView):
     success_url = reverse_lazy('orders:order_created')
 
     def get_context_data(self, *args, **kwargs):
-        """Добавляем в контекс шаблона актуальную цену доставки из settings"""
+        """Добавляем в контекс шаблона актуальную цену доставки из settings.
+        Если пользователь прошел аутентификациюб то заполняем поля заказа из профиля"""
         context = super().get_context_data(*args, **kwargs)
+        if self.request.user.is_authenticated:
+            initial_data = get_customer_profile(self.request)
+            context['form'] = self.form_class(initial=initial_data)
         context['transport_cost'] = Decimal(settings.TRANSPORT_COST)
         return context
 
@@ -42,6 +48,8 @@ class OrderCreateView(CreateView):
         записываем id заказа в сессию клиента"""
         order = form.save(commit=False)
         order.transport_cost = calculate_transport_cost(order)
+        if self.request.user.is_authenticated:
+            order.user = self.request.user
         order.save()
         add_products_to_order_from_cart(self, order)
         create_order_pay_action(self.request, order)
@@ -59,9 +67,26 @@ def order_created_success(request):
     return render(request, 'orders/order_complete.html', {'order': order})
 
 
-@staff_member_required
+@permission_to_order_owner_or_admin
 def get_pdf_order(request, order_id):
-    """Обработчик отвечает за формирование информации по заказу в виде pdf"""
+    """
+    Обработчик отвечает за формирование информации по заказу в виде pdf. 
+    Выкидывает 404 если запрос на формирование pdf сделано не владельцем или администратором
+    """
     order = get_object_or_404(Order, id=order_id)
     response = forming_report_order_to_pdf(order)
     return response
+
+
+@permission_to_order_owner_or_admin
+def get_order_detail(request, order_id):
+    """
+    Выводит детальную информацию по ранее созданному заказу
+    Выкидывает 404 если запрос на формирование pdf сделано не владельцем или администратором
+    """
+    order = get_object_or_404(Order, id=order_id)
+    items = order.items.all()
+    return render(request, 'orders/order_detail.html', {
+        'order': order,
+        'items': items,
+    })
