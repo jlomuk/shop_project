@@ -7,7 +7,7 @@ from django.contrib.auth.views import (LoginView,
                                        )
 from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView, UpdateView
-
+from django.http import HttpResponseRedirect
 
 from .forms import UserForm, UpdateUserForm, UpdateProfileForm
 from .models import Profile
@@ -24,24 +24,34 @@ class UpdateProfileCustomer(UpdateView):
         """Возврат инстанса пользователя"""
         return self.request.user
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *args, **kwargs):
         """Передача двух форм в контекст шаблона"""
         context = super().get_context_data(**kwargs)
-        context['user_form'] = self.form_class(instance=self.get_object())
-        context['profile_form'] = self.profile_form(
-            instance=self.get_object().profile)
+        if 'form' not in context:
+            context['form'] = self.form_class(instance=self.get_object())
+        if 'profile_form' not in context:
+            context['profile_form'] = self.profile_form(
+                instance=self.get_object().profile
+            )
         return context
 
     def post(self, request, *args, **kwargs):
+        """Заполняет 2 формы данными из Post запроса. В случаи валидности этих двух форм,  
+        сохраняет данные покупателя в БД. При невалидности одной из форм, 
+        возвращает в шадлон обе формы с ошибками для корректировки"""
         self.object = self.get_object()
-        form1 = self.form_class(instance=self.object, data=request.POST)
-        form2 = self.profile_form(
+        form = self.form_class(instance=self.object,
+                               data=request.POST)
+        profile_form = self.profile_form(
             instance=self.object.profile, data=request.POST)
-        if form1.is_valid() and form2.is_valid():
-            messages.success(self.request, "Данные успешно обновлены")
-            return self.form_valid(form1) and self.form_valid(form2)
-        else:
-            return self.form_invalid(form1) and self.form_invalid(form2)
+        if not form.is_valid() or not profile_form.is_valid():
+            return self.render_to_response(
+                self.get_context_data(form=form, profile_form=profile_form)
+            )
+        form.save()
+        profile_form.save()
+        messages.success(self.request, "Данные успешно обновлены")
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class LoginCustomerView(LoginView):

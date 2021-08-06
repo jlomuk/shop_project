@@ -5,6 +5,7 @@ from django import forms
 
 from .models import Profile
 
+
 class UserForm(UserCreationForm):
     """Расширенная форма регистрации пользователя"""
     first_name = forms.CharField()
@@ -26,9 +27,21 @@ class UserForm(UserCreationForm):
 
 class UpdateUserForm(forms.ModelForm):
     """Форма для обновление полей пользователя"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = kwargs.get('instance')
+
     class Meta:
         model = User
-        fields = ('first_name', 'last_name')
+        fields = ('first_name', 'last_name', 'email')
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        customer = User.objects.filter(email=email)
+        if customer.exists() and customer.last() != self.user:
+            raise ValidationError("Пользователь с такой почтой уже существует")
+        return email
 
 
 class UpdateProfileForm(forms.ModelForm):
@@ -39,6 +52,6 @@ class UpdateProfileForm(forms.ModelForm):
 
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
-        if len(phone) > 11:
+        if not (10 <= len(phone) <= 11) or not phone.isdigit():
             raise ValidationError("Некорректный номер телефона")
         return phone
