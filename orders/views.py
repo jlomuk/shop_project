@@ -13,7 +13,7 @@ from .service import (calculate_transport_cost,
                       add_products_to_order_from_cart,
                       create_order_pay_action,
                       forming_report_order_to_pdf,
-                      get_customer_profile, 
+                      get_customer_profile,
                       )
 from .tasks import send_mail_after_create_order
 
@@ -47,6 +47,8 @@ class OrderCreateView(CreateView):
         записываем id заказа в сессию клиента"""
         order = form.save(commit=False)
         order.transport_cost = calculate_transport_cost(order)
+        if self.request.user.is_authenticated:
+            order.user = self.request.user
         order.save()
         add_products_to_order_from_cart(self, order)
         create_order_pay_action(self.request, order)
