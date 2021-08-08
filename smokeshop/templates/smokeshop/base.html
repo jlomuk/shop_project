@@ -13,15 +13,14 @@
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top py-1"
     id="main-nav">
-    <div class="container">
-        <a href="{% url 'smokeshop:product_list' %}" class="navbar-brand">
-            <h3 class="font-weight-bold">ТабакShop</h3>
-        </a>
-    </div>
-    <button class="navbar-toggler" data-toggle="collapse"
-    data-target="#navbarCollapse">
-    <span class="navbar-toggler-icon"></span>
-</button>
+        <div class="container">
+            <a href="{% url 'smokeshop:product_list' %}" class="navbar-brand">
+                <h3 class="font-weight-bold">ТабакShop</h3>
+            </a>
+            <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
 <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="navbar-nav ml-auto">
         {% if request.user.is_authenticated %}
