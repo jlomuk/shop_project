@@ -4,8 +4,9 @@ import datetime
 import xlsxwriter
 import weasyprint
 from io import BytesIO  
-
 from decimal import Decimal
+
+from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -71,6 +72,8 @@ def create_report_to_xlsx_for_orders(response, opts, products, queryset):
                 order_price_total += value
             if isinstance(value, datetime.datetime):
                 value = value.strftime('%d/%m/%Y')
+            if isinstance(value, get_user_model()):
+                value = str(value)
             data_row.append(value)
 
         for product in prod_tracker:
