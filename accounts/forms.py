@@ -1,7 +1,7 @@
-from django.contrib.auth.forms import UserCreationForm
-from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 from .models import Profile
 
@@ -46,12 +46,13 @@ class UpdateUserForm(forms.ModelForm):
 
 class UpdateProfileForm(forms.ModelForm):
     """Форма для заполнения и обновление полей профиля"""
+
     class Meta:
         model = Profile
         fields = ('phone', 'address', 'postal_code', 'city')
 
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
-        if not (10 <= len(phone) <= 11) or not phone.isdigit():
-            raise ValidationError("Некорректный номер телефона")
-        return phone
+        if phone == '' or (10 <= len(phone) <= 11 and phone.isdigit()):
+            return phone
+        raise ValidationError("Некорректный номер телефона")
