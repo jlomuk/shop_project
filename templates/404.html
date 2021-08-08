@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>404 ошибка</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href='//fonts.googleapis.com/css?family=Capriola' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static 'css/404.css' %}">
+</head>
+
+
+<body>
+	<div class="wrap">
+		<div class="logo">
+			<h1>404</h1>
+			<p>Извините, запрошенной Вами страницы не существует</p>
+			<div class="sub">
+			   <p><a href="{% url 'smokeshop:product_list' %}">Вернуться на главную</a></p>
+			</div>
+		</div>
+	</div>
+
