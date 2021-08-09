@@ -77,17 +77,17 @@
             </div>
         </div>
         <hr>
-        <div class="row">
-            <button type="submit" class="btn col" data-toggle="tooltip"
-            data-placement="top" title="Fill in new details and click 'Update profile'">
+        <div class="d-flex justify-content-around">
+            <button type="submit" class="btn btn-outline-primary " data-toggle="tooltip"
+            data-placement="top" title="Для обновления профиля нажмите на эту кнопку">
                 Обновить профиль
             </button>
-            <a class="btn col" href="{% url 'accounts:password_change' %}">
+            <a class="btn btn-outline-primary" href="{% url 'accounts:password_change' %}">
             Изменить пароль
             </a>
         </div>
         <hr>
-        <h3 class="mb-3">История заказов:</h3>
+        <h3 class="mb-3 text-center">История заказов:</h3>
         <table class="table">
             {% for order in orders %}
             <tr>

@@ -5,7 +5,7 @@
     <h3 class="py-2 font-weight-bold text-grey text-center">
         Ваша корзина:
     </h3>
-    <div class="row justify-content-center py-2 text-center header-desc">
+    <div class="row justify-content-right py-2 text-center header-desc">
         <div class="col-lg-2 align-self-center">
             Товар
         </div>
@@ -21,13 +21,13 @@
         <div class="col-lg-2 align-self-center">
             Количество
         </div>
-        <div class="col-lg-3 align-self-center">
+        <div class="col-lg-2 align-self-center">
             Общая цена
         </div>
     </div>
-    <hr class="mt-0">
     {% for item in cart %}
     {% with product=item.product %}
+        <hr class="mt-1">
     <div class="row justify-content-center cart">
         <div class="cart-item col-4 col-lg-2 mb-2">
             <a href="{{ product.get_absolute_url }}">
@@ -70,7 +70,7 @@
             </form>
         </div>
         <div class="cart-item col-12 col-sm-3
-        col-lg-2 align-self-center text-right">
+        col-lg-2 align-self-center text-center">
         <span>{{ item.total_price }} руб.</span>
         </div>
         <div class="cart-item col-12 col-lg-1 text-right align-self-center">
@@ -97,8 +97,8 @@
             <div class="col-5 col-lg-9 text-right text-grey">
                 Итого
             </div>
-            <div class="col-5 col-lg-2 text-right text-danger">
-                {{ cart.get_total_price|floatformat:2 }} руб.
+            <div class="col-5 col-lg-2 text-center text-danger">
+                {{ cart.get_total_price|floatformat:0}} руб.
             </div>
             <div class="col-2 col-lg-1">
             </div>
@@ -115,9 +115,9 @@
                     class="btn btn-warning shadow-custom col">
                         Вернуться в магазин
                     </a>
-                    <a href="{% url 'orders:order_create' %}" class="btn btn-danger shadow-custom col">
-                        Заказать!
-                    </a>
+                    <button onclick="location.href='{% url 'orders:order_create' %}';" class="btn btn-danger shadow-custom col">
+                        Заказать
+                    </button>
                 </div>
             </div>
         </div>
