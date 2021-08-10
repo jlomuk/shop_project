@@ -12,7 +12,7 @@ class CartAddProductFormTestCase(TestCase):
         })
         self.assertTrue(form.is_valid())
         self.assertEqual({}, form.errors)
-        self.assertIn('form-control text-center px-3', form.as_p())
+        self.assertIn('form-control text-center px-2', form.as_p())
 
     def test_valid_form_without_update(self):
         """Тест формы при передачи корректных данных"""

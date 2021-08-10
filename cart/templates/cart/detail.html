@@ -57,13 +57,18 @@
             <form action="{% url 'cart:cart_add' product.id %}" method="post">
                 {% csrf_token %}
                 <span class="input-group shopping-cart">
-                    {{ item.update_quantity_form.quantity }}
+                     <div class="input-group-append">
+                        <button type="submit" class="btn text-white decrement_cart"
+                        data-toggle="tooltip" data-placement="top">
+                        <i> - </i>
+                        </button>
+                    </div>
+                        {{ item.update_quantity_form.quantity }}
                     <input type="hidden" name="update" value="True">
                     <div class="input-group-append">
-                        <button type="submit" class="btn text-white"
-                        data-toggle="tooltip" data-placement="top"
-                        title="Изменить">
-                        <i class="fas fa-edit"></i>
+                        <button type="submit" class="btn text-white increment_cart" 
+                        data-toggle="tooltip" data-placement="top">
+                        <i> + </i>
                         </button>
                     </div>
                 </span>

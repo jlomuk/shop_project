@@ -4,62 +4,54 @@ $('#year').text(new Date().getFullYear());
 // init tooltips
 $('[data-toggle="tooltip"]').tooltip();
 
-// define UI vars
-const minusBtn = document.querySelector('#minus');
-const plusBtn = document.querySelector('#plus');
-const form_control = document.querySelector('.form-control')
 
-loadEventListeners();
-function loadEventListeners() {
-    try{
-        minusBtn.addEventListener('click', decreaseAmount);
-        plusBtn.addEventListener('click', increaseAmount);
-    }
-    catch(e){}
+$('#minus').on('click', function() {
+    let currentAmount = $('#id_quantity').val()
+    if (+currentAmount > 1) currentAmount--;
+    $('#id_quantity').attr('value', String(currentAmount))
+})
 
-    try{
 
-        document.addEventListener('DOMContentLoaded',  setTotalCost);
-    }
-    catch(e){}
-}
+$('#plus').on('click', function() {
+    let currentAmount = $('#id_quantity').val()
+    if (+currentAmount < 10) currentAmount++;
+    $('#id_quantity').attr('value', String(currentAmount))
+})
 
-function decreaseAmount(){
-    let currentAmount = document.getElementById('id_quantity').value;
-    
-    if(currentAmount - 1 > 0){
-        currentAmount--;
-        document.getElementById('id_quantity').value = String(currentAmount);
-    }
-}
 
-function increaseAmount(){
+$('.decrement_cart').on('click', function() {
+    let input = $(this).parents('form').find('input.form-control');
+    let value = +input.val();
+    if (value > 1) value--;
+    $(input).attr('value', String(value))
+})
 
-    let currentAmount = Number(document.getElementById('id_quantity').value);
-    if (currentAmount < 10){
-        currentAmount++;
-    }
-    document.getElementById('id_quantity').value = String(currentAmount);
-}
+
+$('.increment_cart').on('click', function() {
+    let input = $(this).parents('form').find('input.form-control');
+    let value = +input.val();
+    if (value < 10) value++;
+    $(input).attr('value', String(value))
+})
+
 
 function setTotalCost() {
     let totalCost = parseInt(document.getElementById("cart_price").innerHTML);
     totalCost += getSumOfElements('transport');
     totalCost = totalCost.toFixed(2);
-    // set total price
     document.getElementById("order-total").innerHTML = `${totalCost} руб`
 }
 
-function getSumOfElements(elementName){
+
+function getSumOfElements(elementName) {
     let sum = 0;
     radios = document.getElementsByName(elementName);
-    for(let i = 0; i < radios.length; i++){
+    for (let i = 0; i < radios.length; i++) {
         if(radios[i].checked){
             if(radios[i].getAttribute('amount') !== 'free'){
                 sum += parseInt(radios[i].getAttribute('amount'));
             }
         }
     }
-
     return sum;
 }
