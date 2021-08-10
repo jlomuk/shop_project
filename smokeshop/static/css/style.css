@@ -437,10 +437,19 @@ body {
 }
 
 .add-to-cart .input-group-append button,
-.shopping-cart .input-group-append button {
+.shopping-cart .input-group-append button.decrement_cart {
   background: #fcae2c;
   border: 1px solid #fcae2c;
-  border-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-top-left-radius: 50px;
+}
+
+.add-to-cart .input-group-append button,
+.shopping-cart .input-group-append button.increment_cart {
+  background: #fcae2c;
+  border: 1px solid #fcae2c;
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
 }
 
 .alert {
