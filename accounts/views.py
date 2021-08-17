@@ -1,14 +1,13 @@
-from django.shortcuts import render
 from django.contrib import messages
-from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import (LoginView,
                                        PasswordChangeView,
                                        PasswordChangeDoneView,
                                        )
-from django.contrib.auth.models import User
-from django.views.generic.edit import CreateView, UpdateView
 from django.http import HttpResponseRedirect
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView, UpdateView
 
 from .forms import UserForm, UpdateUserForm, UpdateProfileForm
 from .models import Profile
@@ -78,11 +77,11 @@ class CreateCustomerView(CreateView):
     form_class = UserForm
     success_url = reverse_lazy('accounts:register_done')
 
-    def form_valid(self, form, *args, **kwargs):
+    def form_valid(self, form):
         """При сохранении в модели юзера, создает профиль в модели"""
         user = form.save()
         Profile.objects.create(user=user)
-        return super().form_valid(form, *args, **kwargs)
+        return super().form_valid(form)
 
 
 def create_customer_done(request, *args, **kwargs):
