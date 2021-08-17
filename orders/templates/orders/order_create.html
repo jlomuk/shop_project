@@ -1,92 +1,94 @@
 {% extends 'smokeshop/base.html' %}
 {% block title %}Оформление заказа{% endblock %}
 {% block content %}
-<div class="card shadow-custom border-0 col-lg-7 mx-auto mb-3">
-    <h3 class="py-2 font-weight-bold text-grey text-center mb-2">
-        Заполнение данных по заказу товара:
-    </h3>
-    <script src="https://js.stripe.com/v3/"></script>
-    <form method="post" id="payment-form">
-        {% csrf_token %}
-        <div class="row">
-            <div class="col-md-6">
-                <div class="input-field">
-                    <label class="text-muted">Имя</label>
-                    {{ form.first_name }}
+    <div class="card shadow-custom border-0 col-lg-7 mx-auto mb-3">
+        <h3 class="py-2 font-weight-bold text-grey text-center mb-2">
+            Заполнение данных по заказу товара:
+        </h3>
+        <script src="https://js.stripe.com/v3/"></script>
+        <form method="post" id="payment-form">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-field">
+                        <label class="text-muted">Имя</label>
+                        {{ form.first_name }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-field">
+                        <label class="text-muted">Фамилия</label>
+                        {{ form.last_name }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-field">
+                        <label class="text-muted">Почта</label>
+                        {{ form.email }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-field">
+                        <label class="text-muted">Телефон</label>
+                        {{ form.phone }}
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="input-field">
-                    <label class="text-muted">Фамилия</label>
-                    {{ form.last_name }}
+            <hr class="mt-0">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-field">
+                        <label class="text-muted">Город</label>
+                        {{ form.city }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="input-field mb-0">
+                        <label class="text-muted">Адрес</label>
+                        {{ form.address }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-field">
+                        <label class="text-muted">Почтовый индекс</label>
+                        {{ form.postal_code }}
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="input-field">
-                    <label class="text-muted">Почта</label>
-                    {{ form.email }}
+            {% if not request.user.is_authenticated %}
+                <div class="mt-2 text-center">
+                    У вас есть учетная запись?
+                    <a href="{% url 'accounts:login' %}" class="text-decoration-none">
+                        Войти
+                    </a>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="input-field">
-                    <label class="text-muted">Телефон</label>
-                    {{ form.phone }}
-                </div>
-            </div>
-        </div>
-        <hr class="mt-0">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="input-field">
-                    <label class="text-muted">Город</label>
-                    {{ form.city }}
-                </div>
-            </div>
-      
-            <div class="col-md-6">
-                <div class="input-field mb-0">
-                    <label class="text-muted">Адрес</label>
-                    {{ form.address }}
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="input-field">
-                    <label class="text-muted">Почтовый индекс</label>
-                    {{ form.postal_code }}
-                </div>
-            </div>
-        </div>
-        {% if not request.user.is_authenticated %}
-            <div class="mt-2 text-center">
-                У вас есть учетная запись?
-                <a href="{% url 'accounts:login' %}" class="text-decoration-none">
-                    Войти
-                </a>
-            </div>
-        {% endif %}
-        <hr>
-        <h4 class="py-2 font-weight-bold text-grey">
-            Способ получения:
-        </h4>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="radiobtn">
-                    <input type="radio" id="id_transport_0" name="transport" value="Courier" amount="{{ transport_cost }}" checked onclick="setTotalCost()" />
-                    <label for="id_transport_0">Курьером
-                        <span class="text-danger float-right pr-3 font-weight-bold">
+            {% endif %}
+            <hr>
+            <h4 class="py-2 font-weight-bold text-grey">
+                Способ получения:
+            </h4>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="radiobtn">
+                        <input type="radio" id="id_transport_0" name="transport" value="Courier"
+                               amount="{{ transport_cost }}" checked onclick="setTotalCost()"/>
+                        <label for="id_transport_0">Курьером
+                            <span class="text-danger float-right pr-3 font-weight-bold">
                         {{ transport_cost }} руб.</span>
-                    </label>
-                </div>
-                <div class="radiobtn">
-                    <input type="radio" id="id_transport_1" name="transport" value="pickup" amount="free" onclick="setTotalCost()"/>
-                    <label for="id_transport_1">Самовывоз
-                        <span class="text-green float-right pr-3 font-weight-bold">
+                        </label>
+                    </div>
+                    <div class="radiobtn">
+                        <input type="radio" id="id_transport_1" name="transport" value="pickup" amount="free"
+                               onclick="setTotalCost()"/>
+                        <label for="id_transport_1">Самовывоз
+                            <span class="text-green float-right pr-3 font-weight-bold">
                         Бесплатно</span>
-                    </label>
+                        </label>
+                    </div>
                 </div>
             </div>
-        </div>
-        <h4 class="py-2 font-weight-bold text-grey">Платежные данные:</h4>
+            <h4 class="py-2 font-weight-bold text-grey">Платежные данные:</h4>
             <div class="form-row">
                 <div id="card-element">
                     <!-- A Stripe Element will be inserted here. -->
@@ -94,30 +96,31 @@
                 <!-- Used to display form errors. -->
                 <div id="card-errors" role="alert"></div>
             </div>
-        <hr class="mb-4">
-        <div class="input-field">
-            <label class="text-muted">Примечания к заказу</label>
-            {{ form.note }}
-        </div>
-        <h4 class="py-2 font-weight-bold text-grey">Общая стоимость:
-            <span id="order-total" class="text-danger float-right"></span>
-        </h4>
+            <hr class="mb-4">
+            <div class="input-field">
+                <label class="text-muted">Примечания к заказу</label>
+                {{ form.note }}
+            </div>
+            <h4 class="py-2 font-weight-bold text-grey">Общая стоимость:
+                <span id="order-total" class="text-danger float-right"></span>
+            </h4>
     </div>
     <div class="col-lg-7 mx-auto mb-3">
         <div class="row justify-content-end">
             <div class="col-lg-8 px-0">
                 <div class="btn-group d-flex">
                     <a href="{% url 'smokeshop:product_list' %}"
-                    class="btn btn-warning shadow-custom col">
-                    Вернуться в магазин
-                </a>
-                <button type="submit" class="btn btn-danger shadow-custom col">
-                    Перейти к оплате
-                </button>
+                       class="btn btn-warning shadow-custom col">
+                        Вернуться в магазин
+                    </a>
+                    <button type="submit" class="btn btn-danger shadow-custom col">
+                        Перейти к оплате
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-</form>
-{% include  'orders/payments.html' %}
+    </form>
+    {% include  'orders/payments.html' %}
 {% endblock content %}
+{% block script%}setTotalCost();{% endblock script%}
